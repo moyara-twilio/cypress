@@ -28,7 +28,7 @@
   "devDependencies": {
     "chai": "3.5.0",
     "cross-env": "6.0.3",
-    "cypress-example-kitchensink": "cypress-io/cypress-example-kitchensink#03d4884a83fe5687e866f747768485ff40e61911",
+    "cypress-example-kitchensink": "cypress-io/cypress-example-kitchensink#release-10/integration-to-e2e",
     "gulp": "4.0.2",
     "gulp-clean": "0.4.0",
     "gulp-gh-pages": "0.6.0-6",
