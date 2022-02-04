@@ -193,10 +193,11 @@ describe.skip('lib/plugins/child/run_plugins', () => {
       this.ipc.on.withArgs('load:plugins').yields({})
       runPlugins.runSetupNodeEvents(setupNodeEventsFn)
 
-      this.ipc.send = _.once((event, errorType, stack) => {
+      this.ipc.send = _.once((event, errorType, pluginsFile, serializedErr) => {
         expect(event).to.eq('setupTestingType:error')
         expect(errorType).to.eq('PLUGINS_FUNCTION_ERROR')
-        expect(stack).to.eq(err.stack)
+        expect(pluginsFile).to.eq('plugins-file')
+        expect(serializedErr.stack).to.eq(err.stack)
 
         return done()
       })
@@ -227,10 +228,10 @@ describe.skip('lib/plugins/child/run_plugins', () => {
 
       this.ipc.on.withArgs('load:plugins').yield({})
 
-      this.ipc.send = _.once((event, errorType, stack) => {
+      this.ipc.send = _.once((event, errorType, serializedErr) => {
         expect(event).to.eq('setupTestingType:error')
         expect(errorType).to.eq('PLUGINS_FUNCTION_ERROR')
-        expect(stack).to.eq(err.stack)
+        expect(serializedErr.stack).to.eq(err.stack)
 
         return done()
       })
