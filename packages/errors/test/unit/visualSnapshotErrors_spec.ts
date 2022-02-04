@@ -57,12 +57,6 @@ const convertHtmlToImage = async (htmlfile: string) => {
   const HEIGHT = 550
   const WIDTH = 1200
 
-  await app.whenReady()
-
-  app.on('window-all-closed', () => {
-    //
-  })
-
   const win = new BrowserWindow({
     show: false,
     width: WIDTH,
@@ -191,6 +185,14 @@ const snapshotErrorConsoleLogs = function (errorFileName: string) {
 
 let consoleLog: SinonSpy
 
+before(async () => {
+  await app.whenReady()
+
+  app.on('window-all-closed', () => {
+    //
+  })
+})
+
 beforeEach(() => {
   consoleLog = sinon.spy(console, 'log')
 })
@@ -200,12 +202,12 @@ afterEach(() => {
 })
 
 const testVisualError = <K extends CypressErrorType> (errorGeneratorFn: () => ErrorGenerator<K>, errorType: K) => {
-  it(errorType, async () => {
-    const variants = errorGeneratorFn()
+  const variants = errorGeneratorFn()
 
-    expect(variants).to.be.an('object')
+  expect(variants).to.be.an('object')
 
-    for (const [key, arr] of Object.entries(variants)) {
+  for (const [key, arr] of Object.entries(variants)) {
+    it(`Visually tests ${errorType} - ${key}`, async () => {
       const filename = key === 'default' ? errorType : `${errorType} - ${key}`
 
       debug(`Converting ${filename}`)
@@ -229,8 +231,8 @@ const testVisualError = <K extends CypressErrorType> (errorGeneratorFn: () => Er
         await convertHtmlToImage(htmlFilename)
         debug(`Conversion complete for ${errorType}`)
       }
-    }
-  }).timeout(10000)
+    }).timeout(20000)
+  }
 }
 
 const testVisualErrors = (whichError: CypressErrorType[] | '*', errorsToTest: {[K in CypressErrorType]: () => ErrorGenerator<K>}) => {
